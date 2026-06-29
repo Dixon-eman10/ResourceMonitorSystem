@@ -1,5 +1,12 @@
 import sqlite3
 from flask import Flask, render_template
+from monitoring.resource_monitor import start_resource_monitor
+from database.database import create_tables
+
+from monitoring.request_tracker import (
+    register_request_tracker,
+    start_request_tracker
+)
 
 app = Flask(__name__)
 
@@ -48,6 +55,10 @@ def create_database():
 
     conn.commit()
     conn.close()
+
+
+# Register the monitoring hooks
+register_request_tracker(app)
 
 
 # ==========================
@@ -100,7 +111,14 @@ def search():
 # ==========================
 
 if __name__ == "__main__":
+
     create_database()
+
+    create_tables()
+
+    start_request_tracker()
+
+    start_resource_monitor()
 
     app.run(
         host="0.0.0.0",
