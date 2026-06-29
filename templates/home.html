@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+Home
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="hero">
+
+    <h1>
+        University Digital Library
+    </h1>
+
+    <p>
+
+        Access books, lecture notes, past papers, research publications,
+        and student projects through a secure online portal.
+
+    </p>
+
+    <div class="buttons">
+
+        <a href="/login" class="btn">
+            Student Login
+        </a>
+
+        <a href="/search" class="btn">
+            Search Library
+        </a>
+
+    </div>
+
+</section>
+
+
+<section class="features">
+
+    <div class="card">
+
+        <h2>Digital Books</h2>
+
+        <p>
+
+            Browse textbooks from different departments.
+
+        </p>
+
+    </div>
+
+    <div class="card">
+
+        <h2>Past Papers</h2>
+
+        <p>
+
+            Revise using previous examination papers.
+
+        </p>
+
+    </div>
+
+    <div class="card">
+
+        <h2>Research Projects</h2>
+
+        <p>
+
+            Explore final year projects and publications.
+
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}

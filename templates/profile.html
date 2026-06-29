@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}
+My Profile
+{% endblock %}
+
+{% block content %}
+
+<section class="profile">
+
+    <h1>Student Profile</h1>
+
+    <div class="profile-card">
+
+        <table>
+
+            <tr>
+                <th>Full Name</th>
+                <td>{{ fullname if fullname else "John Doe" }}</td>
+            </tr>
+
+            <tr>
+                <th>Username</th>
+                <td>{{ username if username else "student01" }}</td>
+            </tr>
+
+            <tr>
+                <th>Email</th>
+                <td>{{ email if email else "student@university.edu" }}</td>
+            </tr>
+
+            <tr>
+                <th>Department</th>
+                <td>{{ department if department else "Computer Science" }}</td>
+            </tr>
+
+            <tr>
+                <th>Membership</th>
+                <td>Active</td>
+            </tr>
+
+        </table>
+
+    </div>
+
+    <h2>Recent Downloads</h2>
+
+    <ul>
+
+        <li>Python Programming Fundamentals.pdf</li>
+
+        <li>Linux Administration Notes.pdf</li>
+
+        <li>Network Security Lecture 5.pdf</li>
+
+    </ul>
+
+</section>
+
+{% endblock %}

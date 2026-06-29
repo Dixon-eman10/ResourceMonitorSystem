@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}
+Search Library
+{% endblock %}
+
+{% block content %}
+
+<section class="search-page">
+
+    <h1>Search Library Resources</h1>
+
+    <p>Find books, lecture notes, research papers and student projects.</p>
+
+    <form method="POST">
+
+        <input
+            type="text"
+            name="keyword"
+            placeholder="Enter title, author or keyword..."
+            required>
+
+        <select name="category">
+
+            <option value="">All Categories</option>
+
+            <option>Books</option>
+
+            <option>Lecture Notes</option>
+
+            <option>Past Papers</option>
+
+            <option>Projects</option>
+
+        </select>
+
+        <button type="submit">
+
+            Search
+
+        </button>
+
+    </form>
+
+    <hr>
+
+    <h2>Search Results</h2>
+
+    {% if results %}
+
+        {% for item in results %}
+
+        <div class="result-card">
+
+            <h3>{{ item.title }}</h3>
+
+            <p><strong>Category:</strong> {{ item.category }}</p>
+
+            <p><strong>Author:</strong> {{ item.author }}</p>
+
+            <p>{{ item.description }}</p>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>No search performed.</p>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+Login
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="login-container">
+
+    <h2>
+
+        Student Login
+
+    </h2>
+
+    <p>
+
+        Login to access your dashboard and library resources.
+
+    </p>
+
+    <form method="POST">
+
+        <label>
+
+            Username
+
+        </label>
+
+        <input
+            type="text"
+            name="username"
+            placeholder="Enter username"
+            required>
+
+
+        <label>
+
+            Password
+
+        </label>
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Enter password"
+            required>
+
+
+        <button type="submit">
+
+            Login
+
+        </button>
+
+    </form>
+
+    {% if error %}
+
+        <div class="error">
+
+            {{ error }}
+
+        </div>
+
+    {% endif %}
+
+    {% if success %}
+
+        <div class="success">
+
+            {{ success }}
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
