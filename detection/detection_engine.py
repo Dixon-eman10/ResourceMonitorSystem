@@ -102,9 +102,10 @@ def detect_attack():
     if decision == "Attack Detected":
 
         # Generate an alert
-        generate_alert(
+        ggenerate_alert(
         attack_type,
-        severity
+        severity,
+        result["metrics"]
         )
 
         # Log the incident

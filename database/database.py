@@ -78,6 +78,30 @@ def insert_alert(alert_type, severity, description):
     connection.commit()
     connection.close()
 
+def alert_exists(alert_type, severity, minutes=1):
+    """
+    Check whether an identical alert has been generated
+    within the last 'minutes' minutes.
+    """
+
+    connection = connect_database()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT AlertID
+        FROM Alerts
+        WHERE AlertType = ?
+        AND Severity = ?
+        AND Timestamp >= datetime('now', ?)
+        LIMIT 1
+    """, (alert_type, severity, f"-{minutes} minute"))
+
+    alert = cursor.fetchone()
+
+    connection.close()
+
+    return alert is not None
+
 
 def insert_incident_log(event_description, detection_status):
 
@@ -157,3 +181,44 @@ if __name__ == "__main__":
     print(fetch_recent_metrics())
 
     print("Database helper functions tested successfully.")
+
+def fetch_recent_alerts(limit=10):
+    """
+    Fetch the most recent alerts.
+    """
+
+    connection = connect_database()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT *
+        FROM Alerts
+        ORDER BY Timestamp DESC
+        LIMIT ?
+    """, (limit,))
+
+    alerts = cursor.fetchall()
+
+    connection.close()
+
+    return alerts
+
+
+def get_active_alert_count():
+    """
+    Return the total number of alerts.
+    """
+
+    connection = connect_database()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM Alerts
+    """)
+
+    count = cursor.fetchone()[0]
+
+    connection.close()
+
+    return count
