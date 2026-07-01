@@ -112,6 +112,32 @@ def fetch_recent_metrics(limit=20):
 
     return records
 
+def fetch_latest_metric():
+    """
+    Fetch the most recent monitoring record.
+    """
+
+    connection = connect_database()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT
+            CPUUsage,
+            MemoryUsage,
+            RequestRate,
+            ResponseTime,
+            Timestamp
+        FROM ResourceMetrics
+        ORDER BY MetricID DESC
+        LIMIT 1
+    """)
+
+    record = cursor.fetchone()
+
+    connection.close()
+
+    return record
+
 
 if __name__ == "__main__":
 
