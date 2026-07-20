@@ -1,55 +1,101 @@
 """
-Detection rules for identifying
-low-rate application-layer DDoS attacks.
+Detection Rules Module
+
+Defines heuristic rules for detecting
+low-rate application-layer DDoS attacks
+based on server resource consumption.
 """
 
 
 def rule_cpu_high_normal_request(analysis):
     """
-    Rule 1:
-    CPU High
-    Request Rate Normal
+    Elevated CPU while request rate remains
+    relatively low or normal.
     """
 
+    cpu = analysis["cpu"]["value"]
+    request_rate = analysis["request_rate"]["value"]
+
     return (
-        analysis["cpu"]["status"] == "High"
-        and analysis["request_rate"]["status"] == "Normal"
+        cpu >= 25 and
+        request_rate <= 20
     )
 
 
 def rule_slow_http_attack(analysis):
     """
-    Rule 2:
-    High response time
-    Low/Normal request rate
+    High response time with relatively
+    low or moderate request rate.
     """
 
+    response = analysis["response_time"]["value"]
+    request_rate = analysis["request_rate"]["value"]
+
     return (
-        analysis["response_time"]["status"] == "High"
-        and analysis["request_rate"]["status"] in ["Normal", "Idle"]
+        response >= 0.20 and
+        request_rate <= 20
     )
+
+
+def rule_cpu_and_response_high(analysis):
+    """
+    CPU and response time are both elevated.
+    """
+
+    cpu = analysis["cpu"]["value"]
+    response = analysis["response_time"]["value"]
+
+    return (
+        cpu >= 25 and
+        response >= 0.20
+    )
+
+
+def rule_memory_pressure(analysis):
+    """
+    Elevated memory utilisation.
+    """
+
+    memory = analysis["memory"]["value"]
+
+    return memory >= 55
 
 
 def rule_resource_exhaustion(analysis):
     """
-    Rule 3:
-    High CPU and High Memory
+    Resource exhaustion signature.
+
+    Multiple server resources are elevated
+    simultaneously.
     """
 
+    cpu = analysis["cpu"]["value"]
+    memory = analysis["memory"]["value"]
+    response = analysis["response_time"]["value"]
+
     return (
-        analysis["cpu"]["status"] == "High"
-        and analysis["memory"]["status"] == "High"
+        cpu >= 25 and
+        memory >= 55 and
+        response >= 0.20
     )
 
 
 def rule_high_confidence_attack(analysis):
     """
-    Rule 4:
-    CPU, Memory and Response Time are all High
+    High-confidence signature of a
+    low-rate application-layer DDoS attack.
+
+    Moderate CPU
+    Slow response
+    Low/normal request rate
     """
 
+    cpu = analysis["cpu"]["value"]
+    response = analysis["response_time"]["value"]
+    request_rate = analysis["request_rate"]["value"]
+
     return (
-        analysis["cpu"]["status"] == "High"
-        and analysis["memory"]["status"] == "High"
-        and analysis["response_time"]["status"] == "High"
+        cpu >= 20 and
+        response >= 0.20 and
+        request_rate <= 25
     )

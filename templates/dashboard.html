@@ -1,69 +1,270 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}
-Dashboard
-{% endblock %}
+<head>
 
-{% block content %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<section class="dashboard">
+    <title>Administrator Dashboard</title>
 
-    <h1>Student Dashboard</h1>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/dashboard.css') }}">
 
-    <p>Welcome back, <strong>{{ username if username else "Student" }}</strong>.</p>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <div class="dashboard-cards">
+</head>
 
-        <div class="card">
-            <h3>Available Resources</h3>
-            <h2>1,245</h2>
-            <p>Books, Lecture Notes & Projects</p>
-        </div>
+<body>
 
-        <div class="card">
-            <h3>Your Downloads</h3>
-            <h2>18</h2>
-            <p>Downloaded this semester</p>
-        </div>
+<header>
 
-        <div class="card">
-            <h3>Recent Searches</h3>
-            <h2>7</h2>
-            <p>Searches performed</p>
-        </div>
+    <div class="header-left">
+
+        <h1>Low-Rate DDoS Detection Dashboard</h1>
+
+        <p>
+            Real-Time Resource Monitoring System
+        </p>
 
     </div>
 
-    <div class="recent">
+    <div class="header-right">
 
-        <h2>Recent Activity</h2>
+        <span class="live-indicator">
+            ● LIVE
+        </span>
+
+    </div>
+
+</header>
+
+
+<div class="container">
+
+
+    <!-- ===================================== -->
+    <!-- Summary Cards -->
+    <!-- ===================================== -->
+
+    <section class="cards">
+
+        <div class="card">
+
+            <h3>CPU Usage</h3>
+
+            <p id="cpu-value">
+                {{ dashboard_data.latest_metric.cpu if dashboard_data.latest_metric else "0" }}%
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Memory Usage</h3>
+
+            <p id="memory-value">
+                {{ dashboard_data.latest_metric.memory if dashboard_data.latest_metric else "0" }}%
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Request Rate</h3>
+
+            <p id="request-value">
+                {{ dashboard_data.latest_metric.request_rate if dashboard_data.latest_metric else "0" }}
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Response Time</h3>
+
+            <p id="response-value">
+                {{ dashboard_data.latest_metric.response_time if dashboard_data.latest_metric else "0" }} sec
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ===================================== -->
+    <!-- Detection Status -->
+    <!-- ===================================== -->
+
+    <section class="panel">
+
+        <h2>Detection Status</h2>
+
+        <div id="system-status" class="status-badge">
+
+            🟢 Waiting for Detection Engine...
+
+        </div>
+
+    </section>
+
+
+    <!-- ===================================== -->
+    <!-- Charts -->
+    <!-- ===================================== -->
+
+    <section class="panel">
+
+        <h2>Resource Utilization</h2>
+
+        <div class="chart-grid">
+
+            <div class="chart-card">
+
+                <h3>CPU Usage</h3>
+
+                <canvas id="cpuChart"></canvas>
+
+            </div>
+
+            <div class="chart-card">
+
+                <h3>Memory Usage</h3>
+
+                <canvas id="memoryChart"></canvas>
+
+            </div>
+
+            <div class="chart-card">
+
+                <h3>Request Rate</h3>
+
+                <canvas id="requestChart"></canvas>
+
+            </div>
+
+            <div class="chart-card">
+
+                <h3>Response Time</h3>
+
+                <canvas id="responseChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ===================================== -->
+    <!-- Alerts -->
+    <!-- ===================================== -->
+
+    <section class="panel">
+
+        <div class="section-header">
+
+            <h2>Active Alerts</h2>
+
+            <span class="badge">
+
+                {{ dashboard_data.alerts|length }}
+
+            </span>
+
+        </div>
 
         <table>
 
-            <tr>
-                <th>Date</th>
-                <th>Activity</th>
-            </tr>
+            <thead>
 
-            <tr>
-                <td>21 Jun 2026</td>
-                <td>Downloaded Network Security.pdf</td>
-            </tr>
+                <tr>
 
-            <tr>
-                <td>20 Jun 2026</td>
-                <td>Searched for Machine Learning</td>
-            </tr>
+                    <th>Time</th>
+                    <th>Severity</th>
+                    <th>Description</th>
 
-            <tr>
-                <td>18 Jun 2026</td>
-                <td>Downloaded Python Programming.pdf</td>
-            </tr>
+                </tr>
+
+            </thead>
+
+            <tbody id="alerts-body">
+
+                {% for alert in dashboard_data.alerts %}
+
+                <tr>
+
+                    <td>{{ alert[4] }}</td>
+                    <td>{{ alert[2] }}</td>
+                    <td>{{ alert[3] }}</td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
 
         </table>
 
-    </div>
+    </section>
 
-</section>
 
-{% endblock %}
+    <!-- ===================================== -->
+    <!-- Incident Logs -->
+    <!-- ===================================== -->
+
+    <section class="panel">
+
+        <div class="section-header">
+
+            <h2>Incident Logs</h2>
+
+            <span class="badge">
+
+                {{ dashboard_data.incident_logs|length }}
+
+            </span>
+
+        </div>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Description</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="incident-body">
+
+                {% for log in dashboard_data.incident_logs %}
+
+                <tr>
+
+                    <td>{{ log[3] }}</td>
+                    <td>{{ log[2] }}</td>
+                    <td>{{ log[1] }}</td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
+</body>
+
+</html>

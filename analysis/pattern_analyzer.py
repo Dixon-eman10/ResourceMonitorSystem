@@ -20,11 +20,11 @@ def get_live_metrics():
         return None
 
     return {
-        "cpu": metric[0],
-        "memory": metric[1],
-        "request_rate": metric[2],
-        "response_time": metric[3],
-        "timestamp": metric[4]
+        "cpu": metric["cpu"],
+        "memory": metric["memory"],
+        "request_rate": metric["request_rate"],
+        "response_time": metric["response_time"],
+        "timestamp": metric["timestamp"]
     }
 
 
